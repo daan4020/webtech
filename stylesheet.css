@@ -31,6 +31,7 @@ body, html {
   }
   
   .bg {
+	margin-top: px;
 	/* The image used */
 	background-image: url("foto/duin.jpg");
   
@@ -53,6 +54,7 @@ h1 {
 	font-family:Georgia, 'Times New Roman', Times, serif ;
 	margin-top: 0px;
 	margin-left: 75px;
+	font-size:50px;
 
 }
 
