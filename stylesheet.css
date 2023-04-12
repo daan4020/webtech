@@ -1,12 +1,14 @@
+body {background-color: beige;}
+
 nav {
 	background-color: #333;
-	color: #fff;
+	color: #fcf8f8;
 }
 
 nav ul {
 	list-style: none;
 	margin: 0;
-	padding: 0;
+	padding: 10px;
 }
 
 nav li {
@@ -22,4 +24,34 @@ nav a {
 
 nav a:hover {
 	color: #ccc;
+}
+body, html {
+	height: 100%;
+	margin: 0;
+  }
+  
+  .bg {
+	/* The image used */
+	background-image: url("duin.jpg");
+  
+	/* Full height */
+	height: 50%; 
+  
+	/* Center and scale the image nicely */
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+  }
+p {
+	font-family:'Times New Roman', Times, serif;
+	color:black;
+	font-size: large;
+	margin-top: 10px;
+	margin-left: 75px;
+}
+h1 {
+	font-family:Georgia, 'Times New Roman', Times, serif ;
+	margin-top: 0px;
+	margin-left: 75px;
+
 }
