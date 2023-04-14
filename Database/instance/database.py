@@ -1,12 +1,15 @@
-from flask import Flask
+import os
+from flask import Flask, current_app
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from sqlalchemy import Column, Integer, ForeignKey
 from sqlalchemy.orm import relationship
 
+
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 db = SQLAlchemy(app)
 
 app.app_context().push()
@@ -14,11 +17,11 @@ app.app_context().push()
     
 class Bungalow(db.Model):
     __tablename__ = 'bungalows'
-    id = db.db.Column(db.Integer, primary_key=True)
-    name = db.db.Column(db.String)
-    bungalow_type = db.db.Column(db.Integer)
-    capacity = db.db.Column(db.Integer)
-    weekly_price = db.db.Column(db.Integer)
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String)
+    bungalow_type = db.Column(db.Integer)
+    capacity = db.Column(db.Integer)
+    weekly_price = db.Column(db.Integer)
 
     def __repr__(self):
         return f"<Bungalow(id={self.id}, name='{self.name}', type={self.bungalow_type}, capacity={self.capacity}, weekly_price={self.weekly_price})>"
