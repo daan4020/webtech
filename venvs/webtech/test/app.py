@@ -1,4 +1,5 @@
 import os
+from werkzeug.security import check_password_hash
 from flask import Flask, render_template, request, redirect
 from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData, ForeignKey
 from sqlalchemy.orm import sessionmaker
@@ -18,6 +19,13 @@ Session = sessionmaker(bind=engine)
 
 # define the metadata object
 metadata = MetaData()
+
+#define the users table
+gebruikers_table = Table('gebruikers', metadata,
+    Column('id', Integer, primary_key=True),
+    Column('username', String, unique=True),
+    Column('password_hash', String)
+    )
 
 # define the bungalows table
 bungalows = Table('bungalows', metadata, 
@@ -55,6 +63,20 @@ metadata.create_all(engine)
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/login.html', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        session = Session()
+        user = session.query(User).filter_by(username=username).first()
+        if user and check_password_hash(user.password_hash, password):
+            return redirect(url_for('dashboard'))
+        else:
+            error = 'Gebruikersnaam of wachtwoord is onjuist.'
+            return render_template('login.html', error=error)
+    return render_template('login.html')
 
 @app.route('/index.html')
 def home():

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Inloggen</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='stylesheet.css') }}">
+
+
+  </head>
+  <body>
+    <h1>Inloggen</h1>
+    <form method="post" action="/login">
+      <label for="username">Gebruikersnaam:</label>
+      <input type="text" id="username" name="username">
+      <br>
+      <label for="password">Wachtwoord:</label>
+      <input type="password" id="password" name="password">
+      <br>
+      <input type="submit" value="Inloggen">
+    </form>
+  </body>
+</html>
