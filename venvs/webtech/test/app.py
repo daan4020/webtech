@@ -1,8 +1,10 @@
 import os
+import bcrypt
+import sqlite3
 from werkzeug.security import check_password_hash
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, url_for
 from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData, ForeignKey
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, Mapper
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 import datetime
@@ -70,9 +72,9 @@ def login():
         username = request.form['username']
         password = request.form['password']
         session = Session()
-        user = session.query(User).filter_by(username=username).first()
+        user = session.query(user).filter_by(username=username).first()
         if user and check_password_hash(user.password_hash, password):
-            return redirect(url_for('dashboard'))
+            return redirect(url_for('index.html'))
         else:
             error = 'Gebruikersnaam of wachtwoord is onjuist.'
             return render_template('login.html', error=error)
