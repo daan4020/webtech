@@ -2,7 +2,7 @@ import os
 import bcrypt
 import sqlite3
 from werkzeug.security import check_password_hash
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, get_flashed_messages, flash
 from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData, ForeignKey
 from sqlalchemy.orm import sessionmaker, Mapper, session
 from flask import Flask
@@ -10,6 +10,7 @@ from flask_sqlalchemy import SQLAlchemy
 import datetime
 
 app = Flask(__name__)
+app.secret_key = 'megasuperultrasecretkey'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(app.root_path, 'bungalows.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
@@ -56,32 +57,11 @@ bookings = Table('bookings', metadata,
 # create the tables in the database
 metadata.create_all(engine)
 
-# @app.route('/')
-# def index():
-#     session = Session()
-#     bungalows_list = session.query(bungalows).all()
-#     return render_template('index.html', bungalows=bungalows_list)
-
+# app routes to all parts of the website
 @app.route('/')
 def index():
     return render_template('index.html')
-# def some_function():
-#     gebruikers_table = 'users'
-#     print(gebruikers_table)
 
-# @app.route('/login.html', methods=['GET', 'POST'])
-# def login():
-#     if request.method == 'POST':
-#         username = request.form['username']
-#         password = request.form['password']
-#         session = Session()
-#         gebruikers_table = session.query(  gebruikers_table).filter_by(username=username).first()
-#         if gebruikers_table and check_password_hash(   gebruikers_table.password_hash, password):
-#             return render_template('index.html')
-#         else:
-#             error = 'Gebruikersnaam of wachtwoord is onjuist.'
-#             return render_template('login.html', error=error)
-#     return render_template('login.html')
 @app.route('/login.html', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -90,9 +70,10 @@ def login():
         session = Session()
         user = session.query(gebruikers_table).filter_by(username=username).first()
         if user and user.password == password:
-            return render_template('index.html')
+            return render_template('index2.html')
         else:
             error = 'Gebruikersnaam of wachtwoord is onjuist.'
+            flash('Gebruikersnaam of wachtwoord is onjuist!')
             return render_template('login.html', error=error)
     return render_template('login.html')
 
@@ -107,6 +88,18 @@ def contact():
 @app.route('/booking.html')
 def booking():
     return render_template('booking.html')
+
+@app.route('/index2.html')
+def index2():
+    return render_template('index2.html')
+
+@app.route('/contact2.html')
+def contact2():
+    return render_template('contact2.html')
+
+@app.route('/booking2.html')
+def booking2():
+    return render_template('booking2.html')
 
 
 app.app_context().push()
