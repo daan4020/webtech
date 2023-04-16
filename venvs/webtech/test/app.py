@@ -34,12 +34,13 @@ gebruikers_table = Table('gebruikers', metadata,
     )
 
 # define the bungalows table
-bungalows = Table('bungalows', metadata, 
-    Column('id', Integer, primary_key=True),
-    Column('name', String),
-    Column('type', String),
-    Column('week_price', Integer)
-)
+class Bungalow(db.Model):
+    __tablename__ = 'bungalows'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String)
+    type = db.Column(db.String)
+    week_price = db.Column(db.Integer)
+
 
 # define the guests table
 guests = Table('guests', metadata,
@@ -49,12 +50,18 @@ guests = Table('guests', metadata,
 )
 
 # define the bookings table
-bookings = Table('bookings', metadata,
-    Column('id', Integer, primary_key=True),
-    Column('guest_id', Integer, ForeignKey('guests.id')),
-    Column('bungalow_id', Integer, ForeignKey('bungalows.id')),
-    Column('week', Integer)
-)
+
+class Booking(db.Model):
+    __tablename__ = 'bookings'
+    id = db.Column(db.Integer, primary_key=True)
+    bungalow_id = db.Column(db.Integer, db.ForeignKey('bungalows.id'))
+    week = db.Column(db.Integer)
+    first_name = db.Column(db.String(50))
+    last_name = db.Column(db.String(50))
+    email = db.Column(db.String(120))
+    phone_number = db.Column(db.String(20))
+
+
 class BookingForm(Form):
     first_name = StringField('Achternaam')
     last_name = StringField('Voornaam')
@@ -116,30 +123,41 @@ def contact2():
 
 @app.route('/booking.html', methods=['GET', 'POST'])
 def booking():
-    bungalows_query = db.session.query(bungalows).all()
+    bungalows_query = Bungalow.query.all()
     form = BookingForm(request.form)
     if request.method == 'POST' and form.validate():
+        # get the bungalow ID and week from the form data
         bungalow_id = form.bungalow_id.data
         week = form.week.data
-        # save booking data to the database
-        # ...
-        flash('Booking was successful!', 'success')
-        return redirect(url_for('success'))
+        first_name = form.first_name.data
+        last_name = form.last_name.data
+        email = form.email.data
+        phone_number = form.phone_number.data
+        
+        # create a new booking object
+        booking = Booking(
+            bungalow_id=bungalow_id,
+            week=week,
+            first_name=first_name,
+            last_name=last_name,
+            email=email,
+            phone_number=phone_number
+        )
+        
+        # add the booking to the session and commit it to the database
+        db.session.add(booking)
+        db.session.commit()
+        
+        # get the booked bungalow from the database
+        bungalow = Bungalow.query.get(bungalow_id)
+        
+        # render the success template with booking details
+        return render_template('success.html', bungalow=bungalow, week=week, first_name=first_name, last_name=last_name, email=email, phone_number=phone_number)
     return render_template('booking.html', bungalows=bungalows_query, form=form)
 
 
-@app.route('/booking2.html')
-def booking2():
-    bungalows_query = db.session.query(bungalows).all()
-    form = BookingForm(request.form)
-    if request.method == 'POST' and form.validate():
-        bungalow_id = form.bungalow_id.data
-        week = form.week.data
-        # save booking data to the database
-        # ...
-        flash('Booking was successful!', 'success')
-        return redirect(url_for('success'))
-    return render_template('booking.html', bungalows=bungalows_query, form=form)
+
+
 
 
 

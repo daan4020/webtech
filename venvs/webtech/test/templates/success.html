@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='stylesheet.css') }}">
+	<title>Booking Success</title>
+</head>
+<body>
+	<nav>
+		<ul>
+			<li><a href="index.html">Home</a></li>
+			<li><a href="contact.html">Contact</a></li>
+			<li><a href="booking.html">Bookingen</a></li>
+			<li><a href="index.html">Logout</a></li>
+		</ul>
+	</nav>
+	<h1>Booking Success!</h1>
+	<p>Je hebt {{ bungalow.name }} geboekt voor week {{ week }}!</p>
+	<p>Booking details:</p>
+	<ul>
+		<li>Voornaam: {{ first_name }}</li>
+		<li>Achternaam: {{ last_name }}</li>
+		<li>Email: {{ email }}</li>
+		<li>Telefoonnummer: {{ phone_number }}</li>
+	</ul>
+</body>
+</html>
