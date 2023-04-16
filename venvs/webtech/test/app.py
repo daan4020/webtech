@@ -35,7 +35,6 @@ bungalows = Table('bungalows', metadata,
     Column('id', Integer, primary_key=True),
     Column('name', String),
     Column('type', String),
-    Column('size', Integer),
     Column('week_price', Integer)
 )
 
@@ -56,6 +55,7 @@ bookings = Table('bookings', metadata,
 
 # create the tables in the database
 metadata.create_all(engine)
+
 
 # app routes to all parts of the website
 @app.route('/')
@@ -85,10 +85,6 @@ def home():
 def contact():
     return render_template('contact.html')
 
-@app.route('/booking.html')
-def booking():
-    return render_template('booking.html')
-
 @app.route('/index2.html')
 def index2():
     return render_template('index2.html')
@@ -97,10 +93,24 @@ def index2():
 def contact2():
     return render_template('contact2.html')
 
-@app.route('/booking2.html')
-def booking2():
-    return render_template('booking2.html')
+# app routes to display database information
 
+# route to display the bungalows on the "bookingen" page
+@app.route('/booking.html')
+def bookingen():
+    session = Session()
+    all_bungalows = session.query(bungalows).all()
+    return render_template('booking.html', bungalows=all_bungalows)
+
+@app.route('/booking2.html')
+def bookingen2():
+    session = Session()
+    all_bungalows = session.query(bungalows).all()
+    return render_template('booking2.html', bungalows=all_bungalows)
+
+
+
+# some code to make the website function properly
 
 app.app_context().push()
 

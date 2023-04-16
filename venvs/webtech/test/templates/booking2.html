@@ -17,10 +17,17 @@
 			<li><a href="index.html">Logout</a></li>
 		</ul>
 	</nav>
-
-	<h1>Onze Beschibare bungalows</h1>
-
-	<p>park duin en zee</p>
-
+	<div id="bungalows-list">
+		{% for bungalow in bungalows %}
+			<div class="bungalow">
+				<h3>{{ bungalow.name }}</h3>
+				<p>Type: {{ bungalow.type }}</p>
+				<p>Weekprijs: €{{ bungalow.week_price }}</p>
+			</div>
+		{% endfor %}
+		</div>
+		
 </body>
 </html>
+
+
