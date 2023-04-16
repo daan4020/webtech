@@ -2,15 +2,11 @@
 <html>
 <head>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='stylesheet.css') }}">
-
-    
 	<title>Duin en zee</title>
-    
 </head>
 <body>
 	<nav>
 		<ul>
-            
 			<li><a href="index.html">Home</a></li>
 			<li><a href="contact.html">Contact</a></li>
 			<li><a href="booking.html">Bookingen</a></li>
@@ -25,22 +21,17 @@
 				<p>Type: {{ bungalow.type }}</p>
 				<p>Weekprijs: €{{ bungalow.week_price }}</p>
 				
-				<form method="POST" action="/booking.html">
-					<label for="week">Select week:</label>
-					<select name="week">
-						{% for week in range(1, 53) %}
-							<option value="{{ week }}">{{ week }}</option>
-						{% endfor %}
-					</select>
-					<input type="hidden" name="bungalow_id" value="{{ bungalow.id }}">
-					<input type="submit" value="Book">
+				<form method="POST" action="{{ url_for('booking', bungalow_id=bungalow.id) }}">
+					{{ form.csrf_token }}
+					{{ form.week.label }} {{ form.week }}
+					{{ form.first_name.label }} {{ form.first_name }}
+					{{ form.last_name.label }} {{ form.last_name }}
+					{{ form.email.label }} {{ form.email }}
+					{{ form.phone_number.label }} {{ form.phone_number }}
+					<input type="submit" value="Boeken">
 				</form>
-				
 			</div>
 		{% endfor %}
 	</div>
-		
 </body>
 </html>
-
-

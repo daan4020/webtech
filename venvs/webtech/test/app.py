@@ -8,16 +8,19 @@ from sqlalchemy.orm import sessionmaker, Mapper, session
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 import datetime
+from wtforms import Form, SelectField, HiddenField, SubmitField, StringField
+from wtforms.widgets import NumberInput
+from flask import render_template, request
 
 app = Flask(__name__)
 app.secret_key = 'megasuperultrasecretkey'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(app.root_path, 'bungalows.db')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(app.root_path, 'bungalowpark.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 
 # create an engine to connect to the database
-engine = create_engine('sqlite:///bungalowpark.db', echo=True)
+engine = create_engine('sqlite:///bungalowpark.db')
 Session = sessionmaker(bind=engine)
 
 # define the metadata object
@@ -52,6 +55,14 @@ bookings = Table('bookings', metadata,
     Column('bungalow_id', Integer, ForeignKey('bungalows.id')),
     Column('week', Integer)
 )
+class BookingForm(Form):
+    first_name = StringField('Achternaam')
+    last_name = StringField('Voornaam')
+    email = StringField('Email')
+    phone_number = StringField('Telefoonnummer', widget=NumberInput())
+    week = SelectField('Week', choices=[(str(i), str(i)) for i in range(1, 53)])
+    bungalow_id = HiddenField()
+    submit = SubmitField('Boek')
 
 # create the tables in the database
 metadata.create_all(engine)
@@ -97,21 +108,43 @@ def contact2():
 
 # route voor de boekingspagina
 
-@app.route('/booking.html',methods=['GET', 'POST'])
-def bookingen():
-    session = Session()
-    all_bungalows = session.query(bungalows).all()
-    return render_template('booking.html', bungalows=all_bungalows)
+# @app.route('/booking.html',methods=['GET', 'POST'])
+# def bookingen():
+#     session = Session()
+#     all_bungalows = session.query(bungalows).all()
+#     return render_template('booking.html', bungalows=all_bungalows)
+
+@app.route('/booking.html', methods=['GET', 'POST'])
+def booking():
+    bungalows_query = db.session.query(bungalows).all()
+    form = BookingForm(request.form)
+    if request.method == 'POST' and form.validate():
+        bungalow_id = form.bungalow_id.data
+        week = form.week.data
+        # save booking data to the database
+        # ...
+        flash('Booking was successful!', 'success')
+        return redirect(url_for('success'))
+    return render_template('booking.html', bungalows=bungalows_query, form=form)
+
 
 @app.route('/booking2.html')
-def bookingen2():
-    session = Session()
-    all_bungalows = session.query(bungalows).all()
-    return render_template('booking2.html', bungalows=all_bungalows)
+def booking2():
+    bungalows_query = db.session.query(bungalows).all()
+    form = BookingForm(request.form)
+    if request.method == 'POST' and form.validate():
+        bungalow_id = form.bungalow_id.data
+        week = form.week.data
+        # save booking data to the database
+        # ...
+        flash('Booking was successful!', 'success')
+        return redirect(url_for('success'))
+    return render_template('booking.html', bungalows=bungalows_query, form=form)
 
 
 
 # some code to make the website function properly
+
 
 app.app_context().push()
 
