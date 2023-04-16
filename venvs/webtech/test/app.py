@@ -1,8 +1,10 @@
 import os
+import bcrypt
+import sqlite3
 from werkzeug.security import check_password_hash
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, url_for
 from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData, ForeignKey
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, Mapper, session
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 import datetime
@@ -24,7 +26,7 @@ metadata = MetaData()
 gebruikers_table = Table('gebruikers', metadata,
     Column('id', Integer, primary_key=True),
     Column('username', String, unique=True),
-    Column('password_hash', String)
+    Column('password', String)
     )
 
 # define the bungalows table
@@ -63,16 +65,32 @@ metadata.create_all(engine)
 @app.route('/')
 def index():
     return render_template('index.html')
+# def some_function():
+#     gebruikers_table = 'users'
+#     print(gebruikers_table)
 
+# @app.route('/login.html', methods=['GET', 'POST'])
+# def login():
+#     if request.method == 'POST':
+#         username = request.form['username']
+#         password = request.form['password']
+#         session = Session()
+#         gebruikers_table = session.query(  gebruikers_table).filter_by(username=username).first()
+#         if gebruikers_table and check_password_hash(   gebruikers_table.password_hash, password):
+#             return render_template('index.html')
+#         else:
+#             error = 'Gebruikersnaam of wachtwoord is onjuist.'
+#             return render_template('login.html', error=error)
+#     return render_template('login.html')
 @app.route('/login.html', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
         session = Session()
-        user = session.query(User).filter_by(username=username).first()
-        if user and check_password_hash(user.password_hash, password):
-            return redirect(url_for('dashboard'))
+        user = session.query(gebruikers_table).filter_by(username=username).first()
+        if user and user.password == password:
+            return render_template('index.html')
         else:
             error = 'Gebruikersnaam of wachtwoord is onjuist.'
             return render_template('login.html', error=error)
