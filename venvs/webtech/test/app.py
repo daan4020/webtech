@@ -95,8 +95,9 @@ def contact2():
 
 # app routes to display database information
 
-# route to display the bungalows on the "bookingen" page
-@app.route('/booking.html')
+# route voor de boekingspagina
+
+@app.route('/booking.html',methods=['GET', 'POST'])
 def bookingen():
     session = Session()
     all_bungalows = session.query(bungalows).all()

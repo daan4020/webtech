@@ -20,13 +20,25 @@
 	<div id="bungalows-list">
 		{% for bungalow in bungalows %}
 			<div class="bungalow">
-				<img src="static/foto/strandhuis6.jpg" style="width:50%">
+				<img src="static/foto/strandhuis6.jpg" style="width:100%">
 				<h3>{{ bungalow.name }}</h3>
 				<p>Type: {{ bungalow.type }}</p>
 				<p>Weekprijs: €{{ bungalow.week_price }}</p>
+				
+				<form method="POST" action="/booking.html">
+					<label for="week">Select week:</label>
+					<select name="week">
+						{% for week in range(1, 53) %}
+							<option value="{{ week }}">{{ week }}</option>
+						{% endfor %}
+					</select>
+					<input type="hidden" name="bungalow_id" value="{{ bungalow.id }}">
+					<input type="submit" value="Book">
+				</form>
+				
 			</div>
 		{% endfor %}
-		</div>
+	</div>
 		
 </body>
 </html>
