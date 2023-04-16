@@ -55,7 +55,7 @@ class Booking(db.Model):
     __tablename__ = 'bookings'
     id = db.Column(db.Integer, primary_key=True)
     bungalow_id = db.Column(db.Integer, db.ForeignKey('bungalows.id'))
-    week = db.Column(db.Integer)
+    week = db.Column(db.Integer, unique=True)
     first_name = db.Column(db.String(50))
     last_name = db.Column(db.String(50))
     email = db.Column(db.String(120))
@@ -113,13 +113,6 @@ def contact2():
 
 # app routes to display database information
 
-# route voor de boekingspagina
-
-# @app.route('/booking.html',methods=['GET', 'POST'])
-# def bookingen():
-#     session = Session()
-#     all_bungalows = session.query(bungalows).all()
-#     return render_template('booking.html', bungalows=all_bungalows)
 
 @app.route('/booking.html', methods=['GET', 'POST'])
 def booking():
